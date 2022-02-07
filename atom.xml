@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://hq7733.github.io</id>
+    <id>https://e.coding.net/hq7733/blog/Blog</id>
     <title>琪</title>
-    <updated>2022-02-07T07:36:50.026Z</updated>
+    <updated>2022-02-07T07:53:56.492Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://hq7733.github.io"/>
-    <link rel="self" href="https://hq7733.github.io/atom.xml"/>
-    <logo>https://hq7733.github.io/images/avatar.png</logo>
-    <icon>https://hq7733.github.io/favicon.ico</icon>
+    <link rel="alternate" href="https://e.coding.net/hq7733/blog/Blog"/>
+    <link rel="self" href="https://e.coding.net/hq7733/blog/Blog/atom.xml"/>
+    <logo>https://e.coding.net/hq7733/blog/Blog/images/avatar.png</logo>
+    <icon>https://e.coding.net/hq7733/blog/Blog/favicon.ico</icon>
     <rights>All rights reserved 2022, 琪</rights>
     <entry>
         <title type="html"><![CDATA[Sentinel]]></title>
-        <id>https://hq7733.github.io/post/sentinel/</id>
-        <link href="https://hq7733.github.io/post/sentinel/">
+        <id>https://e.coding.net/hq7733/blog/Blog/post/sentinel/</id>
+        <link href="https://e.coding.net/hq7733/blog/Blog/post/sentinel/">
         </link>
         <updated>2022-02-07T04:10:27.000Z</updated>
         <content type="html"><![CDATA[<h1 id="一-什么是-sentinel">一、什么是 Sentinel</h1>
