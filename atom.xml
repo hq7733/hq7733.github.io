@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hq7733.github.io</id>
     <title>博客</title>
-    <updated>2022-02-07T04:23:11.670Z</updated>
+    <updated>2022-02-07T05:15:09.248Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hq7733.github.io"/>
     <link rel="self" href="https://hq7733.github.io/atom.xml"/>
@@ -15,8 +15,7 @@
         <link href="https://hq7733.github.io/post/sentinel/">
         </link>
         <updated>2022-02-07T04:10:27.000Z</updated>
-        <content type="html"><![CDATA[<p>目录</p>
-<h1 id="一-什么是-sentinel">一、什么是 Sentinel</h1>
+        <content type="html"><![CDATA[<h1 id="一-什么是-sentinel">一、什么是 Sentinel</h1>
 <p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
 <h2 id="sentinel-的特征">Sentinel 的特征</h2>
 <p>丰富的应用场景： Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷（对于突然到来的大量请求，您可以配置流控规则，以稳定的速度逐步处理这些请求，从而避免流量突刺造成系统负载过高）、集群流量控制、实时熔断下游不可用应用等<br>
@@ -29,23 +28,34 @@ Sentinel 的组成<br>
 <h1 id="二-sentinel入门">二、Sentinel入门</h1>
 <h2 id="本地应用创建">本地应用创建</h2>
 <p>整体流程分析</p>
+<blockquote>
 <ol>
 <li>创建SpringBoot项目</li>
 <li>在pom.xml中引入sentinel-core依赖</li>
 <li>创建TestController,定义使用限流规则</li>
-<li>运行测试<br>
-创建SpringBoot项目，命名为sentinel-quick-start</li>
+<li>运行测试</li>
 </ol>
-<p>在pom.xml中引入sentinel-core依赖<br>
-<dependency><br>
-<groupId>com.alibaba.csp</groupId><br>
-<artifactId>sentinel-core</artifactId><br>
-<version>1.8.0</version><br>
-</dependency><br>
-编写TestController<br>
-@RestController<br>
-public class TestController {</p>
-<pre><code>    @GetMapping(&quot;/hello&quot;)
+</blockquote>
+<ol>
+<li>
+<p>创建SpringBoot项目，命名为sentinel-quick-start</p>
+</li>
+<li>
+<p>在pom.xml中引入sentinel-core依赖</p>
+</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.csp&lt;/groupId&gt;
+    &lt;artifactId&gt;sentinel-core&lt;/artifactId&gt;
+    &lt;version&gt;1.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="3">
+<li>编写TestController</li>
+</ol>
+<pre><code class="language-java">@RestController
+public class TestController {
+    @GetMapping(&quot;/hello&quot;)
     public String hello(){
         try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
             return &quot;Hello Sentinel&quot;;
@@ -54,10 +64,9 @@ public class TestController {</p>
         }
         return &quot;系统繁忙，请稍后&quot;;
     }
-
     /** 定义限流规则
-    * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
-    */
+     * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
+     */
     @PostConstruct
     public void init(){
         //1.创建存放限流规则的集合
@@ -77,48 +86,72 @@ public class TestController {</p>
     }
 }
 </code></pre>
+<ol start="4">
+<li>运行测试</li>
+</ol>
+<blockquote>
+<p>正常访问时<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/47bee40b682e03949538ed8a07f0483c.png" alt="" loading="lazy"><br>
+当快速刷新，使QPS大于2时<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/13131927180c38a3e189c5e180722927.png" alt="" loading="lazy"></p>
+</blockquote>
+<h2 id="搭建sentinel控制台">搭建Sentinel控制台</h2>
+<ol>
+<li>首先下载Sentinel控制台<br>
+https://github.com/alibaba/Sentinel/releases</li>
+<li>启动Sentinel</li>
+</ol>
+<p><font color="red"> 注意：</font>启动 Sentinel 控制台需要 JDK 版本为 1.8 及以上版本</p>
+<blockquote>
+<p><strong>在与jar包相同的文件夹下新建一个start.bat</strong><br>
+java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8718<br>
+-Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar</p>
+</blockquote>
+<p>其中 -Dserver.port=8080 用于指定 Sentinel 控制台端口为 8718</p>
+<p><font color="red"> 注意：</font> 从 Sentinel 1.6.0 起，Sentinel 控制台引入基本的 登录 功能，默认用户名和密码都是 sentinel</p>
+<h2 id="本地应用接入控制台">本地应用接入控制台</h2>
+<ol>
+<li>在本地应用的pom.xml文件中引入依赖</li>
+</ol>
+<pre><code class="language-xml">&lt;!-- Sentinel本地应用接入控制台 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.csp&lt;/groupId&gt;
+    &lt;artifactId&gt;sentinel-transport-simple-http&lt;/artifactId&gt;
+    &lt;version&gt;1.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="2">
+<li>在本地应用添加JVM启动参数<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/3d3c67ac5e713e85c82388323623c244.png" alt="" loading="lazy"><br>
+配置</li>
+</ol>
+<pre><code>-Dcsp.sentinel.dashboard.server=localhost:9000   Sentinel控制台的地址和端口号
+-Dproject.name=SentinelQuickStart	本地应用在控制台中的名称
+</code></pre>
 <p>运行测试</p>
-<p>正常访问时</p>
-<p>正常访问</p>
-<p>当快速刷新，使QPS大于2时</p>
-<p>繁忙图片</p>
-<p>搭建Sentinel控制台<br>
-首先下载Sentinel控制台<br>
-https://github.com/alibaba/Sentinel/releases<br>
-启动Sentinel</p>
-<p>注意：启动 Sentinel 控制台需要 JDK 版本为 1.8 及以上版本</p>
-<h1 id="在与jar包相同的文件夹下新建一个startbat">在与jar包相同的文件夹下新建一个start.bat</h1>
-<p>java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8718 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar<br>
-其中 -Dserver.port=8080 用于指定 Sentinel 控制台端口为 8718</p>
-<p>注意： 从 Sentinel 1.6.0 起，Sentinel 控制台引入基本的 登录 功能，默认用户名和密码都是 sentinel</p>
-<p>本地应用接入控制台<br>
-在本地应用的pom.xml文件中引入依赖</p>
-<!-- Sentinel本地应用接入控制台 -->
-<dependency>
-    <groupId>com.alibaba.csp</groupId>
-    <artifactId>sentinel-transport-simple-http</artifactId>
-    <version>1.8.0</version>
-</dependency>
-在本地应用添加JVM启动参数
-<p>配置</p>
-<p>-Dcsp.sentinel.dashboard.server=localhost:9000   Sentinel控制台的地址和端口号<br>
--Dproject.name=SentinelQuickStart				本地应用在控制台中的名称<br>
-运行测试</p>
-<p>第一次查看控制台需要先访问一次被限流控制的接口，否则控制台中没有东西</p>
-<p>1602315326070</p>
-<p>在控制台中设置限流规则<br>
-Sentinel提供了两种设置流控规则的方式</p>
+<blockquote>
+<p>第一次查看控制台需要先访问一次被限流控制的接口，否则控制台中没有东西<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/5e359c5cb50edf0e5050d336b36b6796.png" alt="" loading="lazy"></p>
+</blockquote>
+<h2 id="在控制台中设置限流规则">在控制台中设置限流规则</h2>
+<p><strong>Sentinel提供了两种设置流控规则的方式</strong></p>
+<blockquote>
 <p>在应用中使用代码编写流控规则（不推荐）<br>
-在Sentinel控制台中设置流控规则</p>
-<p>1602316065232</p>
-<p>Sentinel定义资源的方式<br>
-抛出异常的方式定义资源<br>
-返回布尔值的方式定义资源<br>
-异步调用支持<br>
-注解方式定义资源<br>
-主流框架的默认适配<br>
-抛出异常的方式定义资源<br>
-使用这种方式当资源发生限流后会抛出BlockException。这个时候可以捕获异常，进行限流之后的逻辑处理，关键代码如下：</p>
+在Sentinel控制台中设置流控规则<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/8e4570343f177b707639a5254bb05c62.png" alt="" loading="lazy"></p>
+</blockquote>
+<h2 id="sentinel定义资源的方式">Sentinel定义资源的方式</h2>
+<ul>
+<li>抛出异常的方式定义资源</li>
+<li>返回布尔值的方式定义资源</li>
+<li>异步调用支持</li>
+<li>注解方式定义资源</li>
+<li>主流框架的默认适配</li>
+</ul>
+<h2 id="抛出异常的方式定义资源">抛出异常的方式定义资源</h2>
+<blockquote>
+<p>使用这种方式当资源发生限流后会抛出BlockException。这个时候可以捕获异常，进行限流之后的逻辑处理，关键代码如下：</p>
+</blockquote>
 <pre><code>    try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
         return &quot;Hello Sentinel&quot;;  //被保护的资源
     } catch (Exception e) {
@@ -126,289 +159,344 @@ Sentinel提供了两种设置流控规则的方式</p>
     }
     return &quot;系统繁忙，请稍后&quot;;
 </code></pre>
-<p>返回布尔值的方式定义资源<br>
-使用的API为SphO，限流后返回的值为boolean类型<br>
+<h2 id="返回布尔值的方式定义资源">返回布尔值的方式定义资源</h2>
+<blockquote>
+<p>使用的API为SphO，限流后返回的值为boolean类型<br>
 注意：SphO.entry必须和SphO.exit成对出现 否则会报错</p>
-<p>@GetMapping(&quot;/boolean&quot;)<br>
-public boolean returnBoolean(){<br>
-if (SphO.entry(&quot;Sentinel-boolean&quot;)){<br>
-try {<br>
-System.out.println(&quot;Hello Sentinel&quot;);<br>
-return true;<br>
-}finally {<br>
-SphO.exit();//限流的出口<br>
-}<br>
-}else {<br>
-//限流后进行的操作<br>
-System.out.println(&quot;系统繁忙,请稍后再试&quot;);<br>
-return false;<br>
-}<br>
-}</p>
-<p>异步调用的支持<br>
-在本地引导类中添加EnableAsync，表示SpringBoot项目开启异步调用支持<br>
-@SpringBootApplication<br>
-@EnableAsync<br>
-public class SentinelQuickStartApplication {</p>
-<pre><code>public static void main(String[] args) {
-    SpringApplication.run(SentinelQuickStartApplication.class, args);
+</blockquote>
+<pre><code class="language-java">   @GetMapping(&quot;/boolean&quot;)
+    public boolean returnBoolean(){
+        if (SphO.entry(&quot;Sentinel-boolean&quot;)){
+            try {
+                System.out.println(&quot;Hello Sentinel&quot;);
+                return true;
+            }finally {
+                SphO.exit();//限流的出口
+            }
+        }else {
+            //限流后进行的操作
+            System.out.println(&quot;系统繁忙,请稍后再试&quot;);
+            return false;
+        }
+    }
+</code></pre>
+<h2 id="异步调用的支持">异步调用的支持</h2>
+<ol>
+<li>在本地引导类中添加EnableAsync，表示SpringBoot项目开启异步调用支持</li>
+</ol>
+<pre><code class="language-java">@SpringBootApplication
+@EnableAsync
+public class SentinelQuickStartApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SentinelQuickStartApplication.class, args);
+    }
+
 }
 </code></pre>
-<p>}<br>
-创建AsyncService编写异步调用的方法<br>
-@Service<br>
-public class AsyncService {<br>
-//Async表示方法为异步调用<br>
-@Async<br>
-public void hello(){<br>
-System.out.println(&quot;异步调用开始======&quot;);<br>
-try {<br>
-Thread.sleep(5000);<br>
-} catch (InterruptedException e) {<br>
-e.printStackTrace();<br>
-}<br>
-System.out.println(&quot;异步调用结束=====&quot;);<br>
-}<br>
-}<br>
-编写Controller</p>
-<p>@Autowired<br>
-private AsyncService asyncService;</p>
-<p>@GetMapping(&quot;/async&quot;)<br>
-public void async(){<br>
-//1.进行限流控制<br>
-AsyncEntry asyncEntry = null;<br>
-try {<br>
-asyncEntry = SphU.asyncEntry(&quot;Sentinel_Async&quot;); //限流入口<br>
-asyncService.hello(); //异步调用方法<br>
-System.out.println(&quot;异步测试&quot;);<br>
-} catch (BlockException e) {<br>
-e.printStackTrace();<br>
-System.out.println(&quot;系统繁忙请稍后再试&quot;);<br>
-} finally {<br>
-if (asyncEntry != null){<br>
-asyncEntry.exit(); //限流出口<br>
-}<br>
-}<br>
-}</p>
-<p>注解方式定义资源<br>
-Sentinel支持通过@SentinelResource定义资源并配置blockHandler函数来进行限流之后的处理。</p>
-<p>在pom.xml中引入依赖</p>
-<dependency>
-	<groupId>com.alibaba.csp</groupId>
-	<artifactId>sentinel-annotation-aspectj</artifactId>
-	<version>1.8.0</version>
-</dependency>
-创建AspectJ的配置类
-@Configuration
+<ol start="2">
+<li>创建AsyncService编写异步调用的方法</li>
+</ol>
+<pre><code class="language-java">@Service
+public class AsyncService {
+    //Async表示方法为异步调用
+    @Async
+    public void hello(){
+        System.out.println(&quot;异步调用开始======&quot;);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(&quot;异步调用结束=====&quot;);
+    }
+}
+</code></pre>
+<ol start="3">
+<li>编写Controller</li>
+</ol>
+<pre><code class="language-java">@Autowired
+private AsyncService asyncService;
+
+@GetMapping(&quot;/async&quot;)
+public void async(){
+  //1.进行限流控制
+  AsyncEntry asyncEntry = null;
+  try {
+    asyncEntry = SphU.asyncEntry(&quot;Sentinel_Async&quot;); //限流入口
+    asyncService.hello(); //异步调用方法
+    System.out.println(&quot;异步测试&quot;);
+  } catch (BlockException e) {
+    e.printStackTrace();
+    System.out.println(&quot;系统繁忙请稍后再试&quot;);
+  } finally {
+    if (asyncEntry != null){
+       asyncEntry.exit(); //限流出口
+     }
+  }
+}
+</code></pre>
+<h2 id="注解方式定义资源">注解方式定义资源</h2>
+<p>Sentinel支持通过@SentinelResource定义资源并配置blockHandler函数来进行限流之后的处理。</p>
+<ol>
+<li>在pom.xml中引入依赖</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+	&lt;groupId&gt;com.alibaba.csp&lt;/groupId&gt;
+	&lt;artifactId&gt;sentinel-annotation-aspectj&lt;/artifactId&gt;
+	&lt;version&gt;1.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="2">
+<li>创建AspectJ的配置类</li>
+</ol>
+<pre><code class="language-java">@Configuration
 public class SentinelAspectConfiguration {
-<pre><code>@Bean
-public SentinelResourceAspect sentinelResourceAspect(){
-    return new SentinelResourceAspect();
+
+    @Bean
+    public SentinelResourceAspect sentinelResourceAspect(){
+        return new SentinelResourceAspect();
+    }
 }
 </code></pre>
-<p>}<br>
-创建Controller<br>
-// value代表资源名称  blockHandler：设置限流或降级处理的类<br>
-@SentinelResource(value = &quot;Sentinel_Ann&quot;,blockHandler = &quot;exceptionHandler&quot;)<br>
-@GetMapping(&quot;/ann&quot;)<br>
-public String ann(){<br>
-//使用限流规则<br>
-return &quot;Hello Sentinel&quot;;<br>
-}</p>
-<pre><code>public String exceptionHandler(BlockException e){
-    e.printStackTrace();
-    return &quot;系统繁忙请稍后再试&quot;;
+<ol start="3">
+<li>创建Controller</li>
+</ol>
+<pre><code class="language-java">    // value代表资源名称  blockHandler：设置限流或降级处理的类
+    @SentinelResource(value = &quot;Sentinel_Ann&quot;,blockHandler = &quot;exceptionHandler&quot;)
+    @GetMapping(&quot;/ann&quot;)
+    public String ann(){
+        //使用限流规则
+        return &quot;Hello Sentinel&quot;;
+    }
+
+    public String exceptionHandler(BlockException e){
+        e.printStackTrace();
+        return &quot;系统繁忙请稍后再试&quot;;
+    }
+</code></pre>
+<h1 id="三-sentinel高级">三、Sentinel高级</h1>
+<h2 id="spring-cloud-整合-sentinel">Spring Cloud 整合 Sentinel</h2>
+<p><strong>具体步骤</strong></p>
+<ol>
+<li>创建SpringBoot项目，在项目中引入spring-cloud-starter-alibaba-sentinel依赖</li>
+</ol>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;/artifactId&gt;
+    &lt;version&gt;2.2.3.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol start="2">
+<li>在项目中创建Test2Controller</li>
+</ol>
+<pre><code class="language-java">@RestController
+public class Test2Controller {
+
+    @SentinelResource(value = &quot;sentinel_cloud&quot;,blockHandler = &quot;exceptionHandler&quot;)
+    @GetMapping(&quot;/sentinel_cloud&quot;)
+    public String ann(){
+        //使用限流规则
+        return &quot;Hello Sentinel&quot;;
+    }
+
+    public String exceptionHandler(BlockException e){
+        e.printStackTrace();
+        return &quot;系统繁忙请稍后再试&quot;;
+    }
+
 }
 </code></pre>
-<p>三、Sentinel高级<br>
-Spring Cloud 整合 Sentinel<br>
-具体步骤</p>
-<p>创建SpringBoot项目，在项目中引入spring-cloud-starter-alibaba-sentinel依赖<br>
-<dependency><br>
-<groupId>com.alibaba.cloud</groupId><br>
-<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId><br>
-<version>2.2.3.RELEASE</version><br>
-</dependency><br>
-在项目中创建Test2Controller<br>
-@RestController<br>
-public class Test2Controller {</p>
-<pre><code>@SentinelResource(value = &quot;sentinel_cloud&quot;,blockHandler = &quot;exceptionHandler&quot;)
-@GetMapping(&quot;/sentinel_cloud&quot;)
-public String ann(){
-    //使用限流规则
-    return &quot;Hello Sentinel&quot;;
+<ol start="3">
+<li>在application.yaml中加入以下配置</li>
+</ol>
+<pre><code class="language-yml">设置应用的名称
+spring:
+  application:
+    name: springCloudSentinel
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8718 #设置Sentinel控制台的主机地址和端口号
+</code></pre>
+<ol start="4">
+<li>测试<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/040528c4b30a2e2a09012f6741aa7e2a.png" alt="" loading="lazy"></li>
+</ol>
+<h2 id="sentinel整合feign">Sentinel整合Feign</h2>
+<p>Sentinel适配了Feign组件。如果想要使用，除了引用spring-cloud-starter-alibaba-sentinel的依赖，还需要两个步骤：</p>
+<ul>
+<li>配置打开Sentinel对Feign的支持：feign.sentinel.enable=true</li>
+<li>加入spring-cloud-starter-openfeign依赖使Sentinel starter自动化配置类生效</li>
+</ul>
+<blockquote>
+<p>这里配置中心使用的为Nacos，项目结构如下图所示<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/f266005e8fa1e0f18e0a2f12c4a43860.png" alt="" loading="lazy"><br>
+consumer模块中的类：<br>
+Controller</p>
+</blockquote>
+<pre><code class="language-java">@RestController
+public class ConsumerController {
+
+    @Resource
+    private ConsumerService consumerService;
+
+    @GetMapping(&quot;/sayHello&quot;)
+    public String getHello(){
+        return consumerService.getHello();
+    }
 }
 
-public String exceptionHandler(BlockException e){
-    e.printStackTrace();
-    return &quot;系统繁忙请稍后再试&quot;;
-}
-</code></pre>
-<p>}<br>
-在application.yaml中加入以下配置</p>
-<h1 id="设置应用的名称">设置应用的名称</h1>
-<p>spring:<br>
-application:<br>
-name: springCloudSentinel<br>
-cloud:<br>
-sentinel:<br>
-transport:<br>
-dashboard: localhost:8718 #设置Sentinel控制台的主机地址和端口号<br>
-测试</p>
-<p>1602322826039</p>
-<p>Sentinel整合Feign<br>
-Sentinel适配了Feign组件。如果想要使用，除了引用spring-cloud-starter-alibaba-sentinel的依赖，还需要两个步骤：</p>
-<p>配置打开Sentinel对Feign的支持：feign.sentinel.enable=true<br>
-加入spring-cloud-starter-openfeign依赖使Sentinel starter自动化配置类生效<br>
-这里配置中心使用的为Nacos，项目结构如下图所示</p>
-<p>1602331509447</p>
-<p>consumer模块中的类：<br>
-Controller<br>
-@RestController<br>
-public class ConsumerController {</p>
-<pre><code>@Resource
-private ConsumerService consumerService;
+Service
+@FeignClient(value = &quot;nacos-provider&quot;, fallback = ConsumerServiceImpl.class)
+public interface ConsumerService {
 
-@GetMapping(&quot;/sayHello&quot;)
-public String getHello(){
-    return consumerService.getHello();
-}
-</code></pre>
-<p>}</p>
-<p>Service<br>
-@FeignClient(value = &quot;nacos-provider&quot;, fallback = ConsumerServiceImpl.class)<br>
-public interface ConsumerService {</p>
-<pre><code>@GetMapping(&quot;/sayHello&quot;)
-String getHello();
-</code></pre>
-<p>}</p>
-<p>@Service<br>
-public class ConsumerServiceImpl implements ConsumerService {<br>
-@Override<br>
-public String getHello() {<br>
-return &quot;break down&quot;;<br>
-}<br>
-}<br>
-application.yaml</p>
-<p>server:<br>
-port: 9000</p>
-<p>spring:<br>
-application:<br>
-name: nacos-consumer<br>
-cloud:<br>
-nacos:<br>
-discovery:<br>
-# 服务注册地址<br>
-server-addr: 127.0.0.1:8848<br>
-# 熔断限流<br>
-sentinel:<br>
-transport:<br>
-# 控制台地址<br>
-dashboard: localhost:8718<br>
-#开启feign<br>
-feign:<br>
-sentinel:<br>
-enabled: true</p>
-<p>启动类：<br>
-@SpringBootApplication<br>
-//使用注册中心<br>
-@EnableDiscoveryClient<br>
-//获取注册中心的接口<br>
-@EnableFeignClients<br>
-public class NacosConsumerApplication {</p>
-<pre><code>public static void main(String[] args) {
-    SpringApplication.run(NacosConsumerApplication.class, args);
-}
-</code></pre>
-<p>}<br>
-provider模块中的类：<br>
-@RestController<br>
-public class ProviderController {</p>
-<pre><code>@Autowired
-private ConfigurableApplicationContext configurableApplicationContext;
-
-@GetMapping(&quot;/sayHello&quot;)
-public String sayHello(){
-    return &quot;Hello provider &quot;;
+    @GetMapping(&quot;/sayHello&quot;)
+    String getHello();
 }
 
-@GetMapping(&quot;/sayHi&quot;)
-public String sayHi(){
-    String name = configurableApplicationContext.getEnvironment().getProperty(&quot;name&quot;);
-    return &quot;Hi provider &quot; + name;
+@Service
+public class ConsumerServiceImpl implements ConsumerService {
+    @Override
+    public String getHello() {
+        return &quot;break down&quot;;
+    }
 }
 </code></pre>
-<p>}<br>
-application.yaml</p>
-<p>server:<br>
-port: 9002</p>
-<p>spring:<br>
-application:<br>
-name: nacos-provider<br>
-cloud:<br>
-nacos:<br>
-discovery:<br>
-# 服务注册地址<br>
-server-addr: 127.0.0.1:8848<br>
-config:<br>
-# 配置中心地址<br>
-server-addr: 127.0.0.1:8848</p>
-<p>启动类：<br>
-@SpringBootApplication<br>
-@EnableDiscoveryClient<br>
-public class NacosProviderApplication {<br>
-public static void main(String[] args) {<br>
-SpringApplication.run(NacosProviderApplication.class, args);<br>
-}<br>
-}<br>
-注意：如果发生错误<br>
+<p>application.yaml</p>
+<pre><code class="language-yml">server:
+  port: 9000
+
+spring:
+  application:
+    name: nacos-consumer
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+        # 熔断限流
+    sentinel:
+      transport:
+        # 控制台地址
+        dashboard: localhost:8718
+</code></pre>
+<p>#开启feign</p>
+<pre><code class="language-yml">feign:
+  sentinel:
+    enabled: true
+</code></pre>
+<p>启动类：</p>
+<pre><code class="language-java">@SpringBootApplication
+//使用注册中心
+@EnableDiscoveryClient
+//获取注册中心的接口
+@EnableFeignClients
+public class NacosConsumerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(NacosConsumerApplication.class, args);
+    }
+
+}
+</code></pre>
+<p>provider模块中的类：</p>
+<pre><code class="language-java">@RestController
+public class ProviderController {
+    @Autowired
+    private ConfigurableApplicationContext configurableApplicationContext;
+
+    @GetMapping(&quot;/sayHello&quot;)
+    public String sayHello(){
+        return &quot;Hello provider &quot;;
+    }
+
+    @GetMapping(&quot;/sayHi&quot;)
+    public String sayHi(){
+        String name = configurableApplicationContext.getEnvironment().getProperty(&quot;name&quot;);
+        return &quot;Hi provider &quot; + name;
+    }
+}
+</code></pre>
+<p>application.yaml</p>
+<pre><code class="language-yml">server:
+  port: 9002
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+      config:
+        # 配置中心地址
+        server-addr: 127.0.0.1:8848
+</code></pre>
+<p>启动类：</p>
+<pre><code class="language-java">@SpringBootApplication
+@EnableDiscoveryClient
+public class NacosProviderApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(NacosProviderApplication.class, args);
+    }
+}
+</code></pre>
+<blockquote>
+<p>注意：如果发生错误<br>
 NoSuchMethodErrorfeign.RequestTemplate.path（）Ljava / lang / String;<br>
 我遇到的情况是因为版本不匹配造成的<br>
 spring-cloud-starter-alibaba-sentinel 2.1.0.RELEASE，但其中的feign-core是9.5.0，这里面的RequestTemplate类却没有path方法，造成异常。</p>
+</blockquote>
 <p>解决办法：</p>
-<p>pom.xml</p>
-<p>添加流量规则</p>
-<p>1602332712021</p>
-<p>注意此处的资源名格式为：<br>
-http请求方式:协议://服务名/请求路径和参数</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/img_convert/8d7e2c786945634cde523c90329c3437.png" alt="" loading="lazy"></figure>
+<p>添加流量规则<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/1555021a8b4995e0cce9d8c855a45566.png" alt="" loading="lazy"></p>
+<p>注意此处的资源名格式为：</p>
+<pre><code>http请求方式:协议://服务名/请求路径和参数
+</code></pre>
 <p>测试结果<br>
-正常情况下：</p>
-<p>1602332880600</p>
-<p>QPS超过两次</p>
-<p>1602332926361</p>
+正常情况下：<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/a6421556c63521e17d171843146e38c0.png" alt="" loading="lazy"></p>
+<p>QPS超过两次<br>
+<img src="https://img-blog.csdnimg.cn/img_convert/f3a66f18488aa9a0639946cc2dfeb994.png" alt="" loading="lazy"></p>
 <p>Sentinel整合Spring Cloud gateway<br>
 在gateway的pom.xml中引入依赖</p>
-<dependency>
-   <groupId>com.alibaba.cloud</groupId>
-   <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-   <version>2.2.3.RELEASE</version>
-</dependency>
-<dependency>
-   <groupId>com.alibaba.cloud</groupId>
-   <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
-   <version>2.2.3.RELEASE</version>
-</dependency>
-创建GatewayConfiguration配置类，配置流控降级回调操作
-@Component
+<pre><code class="language-xml">&lt;dependency&gt;
+   &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+   &lt;artifactId&gt;spring-cloud-starter-alibaba-sentinel&lt;/artifactId&gt;
+   &lt;version&gt;2.2.3.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+   &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+   &lt;artifactId&gt;spring-cloud-alibaba-sentinel-gateway&lt;/artifactId&gt;
+   &lt;version&gt;2.2.3.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>创建GatewayConfiguration配置类，配置流控降级回调操作</p>
+<pre><code class="language-java">@Component
 public class GatewayConfiguration {
      @PostConstruct
     public void doInit(){
          //设置限流或降级的回调函数
          GatewayCallbackManager.setBlockHandler(new BlockRequestHandler() {
              @Override
-             public Mono<ServerResponse> handleRequest(ServerWebExchange serverWebExchange, java.lang.Throwable throwable) {
-                return ServerResponse.status(200).syncBody("系统繁忙请稍后");
+             public Mono&lt;ServerResponse&gt; handleRequest(ServerWebExchange serverWebExchange, java.lang.Throwable throwable) {
+                return ServerResponse.status(200).syncBody(&quot;系统繁忙请稍后&quot;);
              }
          });
      }
 }
-在application.yaml中配置sentinel控制台访问地址
-spring:
+</code></pre>
+<p>在application.yaml中配置sentinel控制台访问地址</p>
+<pre><code class="language-yml">spring:
   cloud:
     sentinel:
       transport:
         port: 8718
         dashboard: 127.0.0.1:8080
-启动项目，在Sentinel控制台中添加关于资源的控制规则，sentinel在适配spring cloud gateway时提供了两种配置规则
+</code></pre>
+<p>启动项目，在Sentinel控制台中添加关于资源的控制规则，sentinel在适配spring cloud gateway时提供了两种配置规则</p>
 <p>route维度：即在spring配置文件配置的路由条数，资源名为对应的routeId<br>
 自定义API维度：用户可以利用Sentinel提供的API来自定义一些自定义分组</p>
 ]]></content>
