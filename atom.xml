@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hq7733.github.io</id>
-    <title>博客</title>
-    <updated>2022-02-07T05:20:53.209Z</updated>
+    <title>琪</title>
+    <updated>2022-02-07T07:26:42.180Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hq7733.github.io"/>
     <link rel="self" href="https://hq7733.github.io/atom.xml"/>
     <logo>https://hq7733.github.io/images/avatar.png</logo>
     <icon>https://hq7733.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2022, 博客</rights>
+    <rights>All rights reserved 2022, 琪</rights>
     <entry>
         <title type="html"><![CDATA[Sentinel]]></title>
         <id>https://hq7733.github.io/post/sentinel/</id>
