@@ -2,11 +2,11 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sentinel | Gridea</title>
-<link rel="shortcut icon" href="https://hq7733.github.io/favicon.ico?v=1644207091365">
+<title>Sentinel | 博客</title>
+<link rel="shortcut icon" href="https://hq7733.github.io/favicon.ico?v=1644207742869">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://hq7733.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Sentinel | Gridea - Atom Feed" href="https://hq7733.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="Sentinel | 博客 - Atom Feed" href="https://hq7733.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,13 +25,13 @@ Sentinel 的特征
       <div class="main-content">
         <div class="site-header">
   <a href="https://hq7733.github.io">
-  <img class="avatar" src="https://hq7733.github.io/images/avatar.png?v=1644207091365" alt="">
+  <img class="avatar" src="https://hq7733.github.io/images/avatar.png?v=1644207742869" alt="">
   </a>
   <h1 class="site-title">
-    Gridea
+    博客
   </h1>
   <p class="site-description">
-    温故而知新
+    
   </p>
   <div class="menu-container">
     
@@ -102,10 +102,10 @@ Sentinel 的特征
 完善的 SPI 扩展点： Sentinel 提供简单易用、完善的 SPI 扩展接口。您可以通过实现扩展接口来快速地定制逻辑。例如定制规则管理、适配动态数据源等<br>
 Sentinel 的组成<br>
 核心库（Java 客户端）： 不依赖任何框架 / 库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持<br>
-控制台（Dashboard）： 基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器<br>
-二、Sentinel入门<br>
-本地应用创建<br>
-整体流程分析</p>
+控制台（Dashboard）： 基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器</p>
+<h1 id="二-sentinel入门">二、Sentinel入门</h1>
+<h2 id="本地应用创建">本地应用创建</h2>
+<p>整体流程分析</p>
 <ol>
 <li>创建SpringBoot项目</li>
 <li>在pom.xml中引入sentinel-core依赖</li>
@@ -122,39 +122,39 @@ Sentinel 的组成<br>
 编写TestController<br>
 @RestController<br>
 public class TestController {</p>
-<pre><code>@GetMapping(&quot;/hello&quot;)
-public String hello(){
-    try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
-        return &quot;Hello Sentinel&quot;;
-    } catch (Exception e) {
-        e.printStackTrace();
+<pre><code>    @GetMapping(&quot;/hello&quot;)
+    public String hello(){
+        try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
+            return &quot;Hello Sentinel&quot;;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return &quot;系统繁忙，请稍后&quot;;
     }
-    return &quot;系统繁忙，请稍后&quot;;
-}
 
-/** 定义限流规则
- * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
- */
-@PostConstruct
-public void init(){
-    //1.创建存放限流规则的集合
-    List&lt;FlowRule&gt; rules = new ArrayList&lt;&gt;();
-    //2.创建限流规则
-    FlowRule rule = new FlowRule();
-    //定义资源，表示Sentinel会对哪个资源生效
-    rule.setResource(&quot;Hello&quot;);
-    //定义限流的类型(此处使用QPS作为限流类型)
-    rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-    //定义QPS每秒通过的请求数
-    rule.setCount(2);
-    //3.将限流规则存放到集合中
-    rules.add(rule);
-    //4.加载限流规则
-    FlowRuleManager.loadRules(rules);
+    /** 定义限流规则
+    * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
+    */
+    @PostConstruct
+    public void init(){
+        //1.创建存放限流规则的集合
+        List&lt;FlowRule&gt; rules = new ArrayList&lt;&gt;();
+        //2.创建限流规则
+        FlowRule rule = new FlowRule();
+        //定义资源，表示Sentinel会对哪个资源生效
+        rule.setResource(&quot;Hello&quot;);
+        //定义限流的类型(此处使用QPS作为限流类型)
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        //定义QPS每秒通过的请求数
+        rule.setCount(2);
+        //3.将限流规则存放到集合中
+        rules.add(rule);
+        //4.加载限流规则
+        FlowRuleManager.loadRules(rules);
+    }
 }
 </code></pre>
-<p>}<br>
-运行测试</p>
+<p>运行测试</p>
 <p>正常访问时</p>
 <p>正常访问</p>
 <p>当快速刷新，使QPS大于2时</p>
@@ -497,6 +497,11 @@ spring:
 <li><a href="#sentinel-%E7%9A%84%E7%89%B9%E5%BE%81">Sentinel 的特征</a></li>
 </ul>
 </li>
+<li><a href="#%E4%BA%8C-sentinel%E5%85%A5%E9%97%A8">二、Sentinel入门</a>
+<ul>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E5%BA%94%E7%94%A8%E5%88%9B%E5%BB%BA">本地应用创建</a></li>
+</ul>
+</li>
 <li><a href="#%E5%9C%A8%E4%B8%8Ejar%E5%8C%85%E7%9B%B8%E5%90%8C%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AAstartbat">在与jar包相同的文件夹下新建一个start.bat</a></li>
 <li><a href="#%E8%AE%BE%E7%BD%AE%E5%BA%94%E7%94%A8%E7%9A%84%E5%90%8D%E7%A7%B0">设置应用的名称</a></li>
 </ul>
@@ -507,20 +512,11 @@ spring:
         </div>
 
         
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://hq7733.github.io/post/hello-gridea/">
-              <h3 class="post-title">
-                Hello Gridea
-              </h3>
-            </a>
-          </div>
-        
 
         
 
         <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  
   <a class="rss" href="https://hq7733.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>

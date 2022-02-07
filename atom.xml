@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hq7733.github.io</id>
-    <title>Gridea</title>
-    <updated>2022-02-07T04:11:35.312Z</updated>
+    <title>博客</title>
+    <updated>2022-02-07T04:23:11.670Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hq7733.github.io"/>
     <link rel="self" href="https://hq7733.github.io/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
     <logo>https://hq7733.github.io/images/avatar.png</logo>
     <icon>https://hq7733.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2022, Gridea</rights>
+    <rights>All rights reserved 2022, 博客</rights>
     <entry>
         <title type="html"><![CDATA[Sentinel]]></title>
         <id>https://hq7733.github.io/post/sentinel/</id>
@@ -26,10 +25,10 @@
 完善的 SPI 扩展点： Sentinel 提供简单易用、完善的 SPI 扩展接口。您可以通过实现扩展接口来快速地定制逻辑。例如定制规则管理、适配动态数据源等<br>
 Sentinel 的组成<br>
 核心库（Java 客户端）： 不依赖任何框架 / 库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持<br>
-控制台（Dashboard）： 基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器<br>
-二、Sentinel入门<br>
-本地应用创建<br>
-整体流程分析</p>
+控制台（Dashboard）： 基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器</p>
+<h1 id="二-sentinel入门">二、Sentinel入门</h1>
+<h2 id="本地应用创建">本地应用创建</h2>
+<p>整体流程分析</p>
 <ol>
 <li>创建SpringBoot项目</li>
 <li>在pom.xml中引入sentinel-core依赖</li>
@@ -46,39 +45,39 @@ Sentinel 的组成<br>
 编写TestController<br>
 @RestController<br>
 public class TestController {</p>
-<pre><code>@GetMapping(&quot;/hello&quot;)
-public String hello(){
-    try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
-        return &quot;Hello Sentinel&quot;;
-    } catch (Exception e) {
-        e.printStackTrace();
+<pre><code>    @GetMapping(&quot;/hello&quot;)
+    public String hello(){
+        try(Entry entry = SphU.entry(&quot;Hello&quot;)) {
+            return &quot;Hello Sentinel&quot;;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return &quot;系统繁忙，请稍后&quot;;
     }
-    return &quot;系统繁忙，请稍后&quot;;
-}
 
-/** 定义限流规则
- * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
- */
-@PostConstruct
-public void init(){
-    //1.创建存放限流规则的集合
-    List&lt;FlowRule&gt; rules = new ArrayList&lt;&gt;();
-    //2.创建限流规则
-    FlowRule rule = new FlowRule();
-    //定义资源，表示Sentinel会对哪个资源生效
-    rule.setResource(&quot;Hello&quot;);
-    //定义限流的类型(此处使用QPS作为限流类型)
-    rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-    //定义QPS每秒通过的请求数
-    rule.setCount(2);
-    //3.将限流规则存放到集合中
-    rules.add(rule);
-    //4.加载限流规则
-    FlowRuleManager.loadRules(rules);
+    /** 定义限流规则
+    * @PostConstruct 此注解的含义是：本类构造方法执行结束后执行
+    */
+    @PostConstruct
+    public void init(){
+        //1.创建存放限流规则的集合
+        List&lt;FlowRule&gt; rules = new ArrayList&lt;&gt;();
+        //2.创建限流规则
+        FlowRule rule = new FlowRule();
+        //定义资源，表示Sentinel会对哪个资源生效
+        rule.setResource(&quot;Hello&quot;);
+        //定义限流的类型(此处使用QPS作为限流类型)
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        //定义QPS每秒通过的请求数
+        rule.setCount(2);
+        //3.将限流规则存放到集合中
+        rules.add(rule);
+        //4.加载限流规则
+        FlowRuleManager.loadRules(rules);
+    }
 }
 </code></pre>
-<p>}<br>
-运行测试</p>
+<p>运行测试</p>
 <p>正常访问时</p>
 <p>正常访问</p>
 <p>当快速刷新，使QPS大于2时</p>
@@ -412,38 +411,6 @@ spring:
 启动项目，在Sentinel控制台中添加关于资源的控制规则，sentinel在适配spring cloud gateway时提供了两种配置规则
 <p>route维度：即在spring配置文件配置的路由条数，资源名为对应的routeId<br>
 自定义API维度：用户可以利用Sentinel提供的API来自定义一些自定义分组</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://hq7733.github.io/post/hello-gridea/</id>
-        <link href="https://hq7733.github.io/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
 ]]></content>
     </entry>
 </feed>
