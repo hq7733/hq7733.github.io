@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://hq7733.github.io</id>
     <title>博客</title>
-    <updated>2022-02-07T05:15:09.248Z</updated>
+    <updated>2022-02-07T05:17:34.238Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://hq7733.github.io"/>
     <link rel="self" href="https://hq7733.github.io/atom.xml"/>
@@ -331,10 +331,10 @@ spring:
 </ul>
 <blockquote>
 <p>这里配置中心使用的为Nacos，项目结构如下图所示<br>
-<img src="https://img-blog.csdnimg.cn/img_convert/f266005e8fa1e0f18e0a2f12c4a43860.png" alt="" loading="lazy"><br>
-consumer模块中的类：<br>
-Controller</p>
+<img src="https://img-blog.csdnimg.cn/img_convert/f266005e8fa1e0f18e0a2f12c4a43860.png" alt="" loading="lazy"></p>
 </blockquote>
+<p>consumer模块中的类：<br>
+Controller</p>
 <pre><code class="language-java">@RestController
 public class ConsumerController {
 
